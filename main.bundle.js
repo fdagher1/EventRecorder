@@ -5,7 +5,7 @@ webpackJsonp([1,4],{
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(94);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__(95);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_do__ = __webpack_require__(358);
@@ -118,7 +118,7 @@ var ServiceEventData = (function () {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_angular2_jwt__ = __webpack_require__(518);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_angular2_jwt__ = __webpack_require__(519);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_angular2_jwt___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_angular2_jwt__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ServiceAuth; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -204,7 +204,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_platform_browser_dynamic__ = __webpack_require__(474);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__app_app_module__ = __webpack_require__(505);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__environments_environment__ = __webpack_require__(515);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__environments_environment__ = __webpack_require__(516);
 
 
 
@@ -243,7 +243,7 @@ var AppComponent = (function () {
     AppComponent = __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
             selector: 'app-root',
-            template: "\n    <div class='container'>\n        \n        <div class='panel panel-primary'>\n        \n            <div class='panel-heading' style=\"overflow: hidden;\">\n                <a [routerLink]=\"['']\" style=\"color:white;text-decoration:none;float: left;\">\n                    {{pageTitle}}\n                </a>\n                <button class=\"btn btn-primary btn-margin\" style=\"float: right;\" (click)=\"serviceauth.login()\" *ngIf=\"!serviceauth.authenticated()\">Log In</button>\n                <button class=\"btn btn-primary btn-margin\" style=\"float: right;\" (click)=\"serviceauth.logout()\" *ngIf=\"serviceauth.authenticated() && serviceauth.userProfile\">Log Out {{serviceauth.userProfile.nickname}}</button>\n                <button class=\"btn btn-primary btn-margin\" style=\"float: right;\" (click)=\"serviceauth.logout()\" *ngIf=\"serviceauth.authenticated() && !serviceauth.userProfile\">Log Out </button>\n            </div>\n            \n            <div >\n                <router-outlet></router-outlet>\n            </div>                           \n            \n        </div>\n    </div>\n  "
+            template: "\n    <div class='container'>\n        \n        <div class='panel panel-primary'>\n        \n            <div class='panel-heading' style=\"overflow: hidden;\">\n                <a [routerLink]=\"['']\" style=\"color:white;text-decoration:none;margin: 20;\"> {{pageTitle}} </a>\n\n                <button class=\"btn btn-default btn-xs\" style=\"float: right;\" (click)=\"serviceauth.login()\" *ngIf=\"!serviceauth.authenticated()\">Log In</button>\n                <button class=\"btn btn-default btn-xs\" style=\"float: right;\" (click)=\"serviceauth.logout()\" *ngIf=\"serviceauth.authenticated() && serviceauth.userProfile\">Log Out {{serviceauth.userProfile.nickname}}</button>\n                <button class=\"btn btn-default btn-xs\" style=\"float: right;\" (click)=\"serviceauth.logout()\" *ngIf=\"serviceauth.authenticated() && !serviceauth.userProfile\">Log Out </button>\n               \n            </div>                           \n            \n            <router-outlet></router-outlet>\n\n        </div>\n    </div>\n  "
         }), 
         __metadata('design:paramtypes', [(typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__service_auth_service__["a" /* ServiceAuth */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__service_auth_service__["a" /* ServiceAuth */]) === 'function' && _a) || Object])
     ], AppComponent);
@@ -260,7 +260,7 @@ var AppComponent = (function () {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_platform_browser__ = __webpack_require__(148);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_router__ = __webpack_require__(97);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_router__ = __webpack_require__(72);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__app_component__ = __webpack_require__(504);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__service_auth_service__ = __webpack_require__(334);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__events_event_module__ = __webpack_require__(507);
@@ -347,15 +347,15 @@ var DataEvent = (function () {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__(97);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_angular_in_memory_web_api__ = __webpack_require__(517);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__(72);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_angular_in_memory_web_api__ = __webpack_require__(518);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__data_event__ = __webpack_require__(506);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__eventlist_component__ = __webpack_require__(511);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__service_eventdata_service__ = __webpack_require__(151);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pipe_eventfilter_pipe__ = __webpack_require__(512);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__eventdetail_component__ = __webpack_require__(509);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__eventedit_component__ = __webpack_require__(510);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__shared_shared_module__ = __webpack_require__(514);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__shared_shared_module__ = __webpack_require__(515);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return EventModule; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -425,7 +425,7 @@ var eventTypes = ["Activity", "Concert/Play", "Conference", "Hotel", "Museum", "
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__(97);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__(72);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__service_eventdata_service__ = __webpack_require__(151);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return EventDetailComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -465,7 +465,7 @@ var EventDetailComponent = (function () {
     };
     EventDetailComponent = __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
-            template: __webpack_require__(574)
+            template: __webpack_require__(575)
         }), 
         __metadata('design:paramtypes', [(typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* ActivatedRoute */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* ActivatedRoute */]) === 'function' && _a) || Object, (typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__angular_router__["c" /* Router */]) === 'function' && _b) || Object, (typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2__service_eventdata_service__["a" /* ServiceEventData */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_2__service_eventdata_service__["a" /* ServiceEventData */]) === 'function' && _c) || Object])
     ], EventDetailComponent);
@@ -482,16 +482,16 @@ var EventDetailComponent = (function () {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_forms__ = __webpack_require__(137);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_router__ = __webpack_require__(97);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_router__ = __webpack_require__(72);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_debounceTime__ = __webpack_require__(356);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_debounceTime___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_debounceTime__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_observable_fromEvent__ = __webpack_require__(350);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_observable_fromEvent___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_rxjs_add_observable_fromEvent__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_observable_merge__ = __webpack_require__(352);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_rxjs_add_observable_merge___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_rxjs_add_observable_merge__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_Rx__ = __webpack_require__(578);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_Rx__ = __webpack_require__(580);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_Rx___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_rxjs_Rx__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__shared_generic_validator__ = __webpack_require__(513);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__shared_generic_validator__ = __webpack_require__(514);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__event__ = __webpack_require__(508);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__service_eventdata_service__ = __webpack_require__(151);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return EventEditComponent; });
@@ -619,7 +619,7 @@ var EventEditComponent = (function () {
     ], EventEditComponent.prototype, "formInputElements", void 0);
     EventEditComponent = __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
-            template: __webpack_require__(575)
+            template: __webpack_require__(576)
         }), 
         __metadata('design:paramtypes', [(typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_forms__["c" /* FormBuilder */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__angular_forms__["c" /* FormBuilder */]) === 'function' && _a) || Object, (typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* ActivatedRoute */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* ActivatedRoute */]) === 'function' && _b) || Object, (typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["c" /* Router */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_2__angular_router__["c" /* Router */]) === 'function' && _c) || Object, (typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_9__service_eventdata_service__["a" /* ServiceEventData */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_9__service_eventdata_service__["a" /* ServiceEventData */]) === 'function' && _d) || Object])
     ], EventEditComponent);
@@ -636,7 +636,7 @@ var EventEditComponent = (function () {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__service_eventdata_service__ = __webpack_require__(151);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_router__ = __webpack_require__(97);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_router__ = __webpack_require__(72);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return EventListComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -662,7 +662,7 @@ var EventListComponent = (function () {
     };
     EventListComponent = __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
-            template: __webpack_require__(576)
+            template: __webpack_require__(577)
         }), 
         __metadata('design:paramtypes', [(typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__service_eventdata_service__["a" /* ServiceEventData */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__service_eventdata_service__["a" /* ServiceEventData */]) === 'function' && _a) || Object, (typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["c" /* Router */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_2__angular_router__["c" /* Router */]) === 'function' && _b) || Object])
     ], EventListComponent);
@@ -711,6 +711,37 @@ var PipeEventFilter = (function () {
 /***/ }),
 
 /***/ 513:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AboutComponent; });
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+var AboutComponent = (function () {
+    function AboutComponent() {
+    }
+    AboutComponent = __decorate([
+        __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
+            template: __webpack_require__(578)
+        }), 
+        __metadata('design:paramtypes', [])
+    ], AboutComponent);
+    return AboutComponent;
+}());
+//# sourceMappingURL=about.component.js.map
+
+/***/ }),
+
+/***/ 514:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -776,14 +807,16 @@ var GenericValidator = (function () {
 
 /***/ }),
 
-/***/ 514:
+/***/ 515:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common__ = __webpack_require__(76);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common__ = __webpack_require__(77);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_forms__ = __webpack_require__(137);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_http__ = __webpack_require__(94);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_http__ = __webpack_require__(95);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_router__ = __webpack_require__(72);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__about_component__ = __webpack_require__(513);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SharedModule; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -799,6 +832,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
+
 var SharedModule = (function () {
     function SharedModule() {
     }
@@ -806,14 +841,19 @@ var SharedModule = (function () {
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["NgModule"])({
             imports: [
                 __WEBPACK_IMPORTED_MODULE_1__angular_common__["b" /* CommonModule */],
-                __WEBPACK_IMPORTED_MODULE_3__angular_http__["HttpModule"]
+                __WEBPACK_IMPORTED_MODULE_3__angular_http__["HttpModule"],
+                __WEBPACK_IMPORTED_MODULE_4__angular_router__["a" /* RouterModule */].forChild([
+                    { path: 'about', component: __WEBPACK_IMPORTED_MODULE_5__about_component__["a" /* AboutComponent */] }
+                ]),
             ],
             exports: [
                 __WEBPACK_IMPORTED_MODULE_1__angular_common__["b" /* CommonModule */],
                 __WEBPACK_IMPORTED_MODULE_2__angular_forms__["e" /* FormsModule */],
                 __WEBPACK_IMPORTED_MODULE_2__angular_forms__["f" /* ReactiveFormsModule */],
             ],
-            declarations: [],
+            declarations: [
+                __WEBPACK_IMPORTED_MODULE_5__about_component__["a" /* AboutComponent */]
+            ],
         }), 
         __metadata('design:paramtypes', [])
     ], SharedModule);
@@ -823,7 +863,7 @@ var SharedModule = (function () {
 
 /***/ }),
 
-/***/ 515:
+/***/ 516:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -839,28 +879,35 @@ var environment = {
 
 /***/ }),
 
-/***/ 574:
-/***/ (function(module, exports) {
-
-module.exports = "<div class='panel-body' *ngIf='event'>\r\n    <div class='table-responsive'>\r\n        <table class='table'>\r\n            <tbody>\r\n                <tr></tr>\r\n                <tr>Event Name: {{event.eventName}}</tr>\r\n                <tr>Event Type: {{event.eventType}}</tr>\r\n            </tbody>\r\n        </table>   \r\n    </div>\r\n\r\n\r\n    <div class='panel-footer'>\r\n        <button class=\"btn btn-default\" [routerLink]=\"['/eventlist']\" style=\"width:80px\">\r\n            Back\r\n        </button>\r\n        <a class=\"btn btn-primary\" [routerLink]=\"['/eventedit', event.id]\" style=\"width:80px;margin-left:10px\">\r\n            Edit\r\n        </a>\r\n    </div>\r\n</div>"
-
-/***/ }),
-
 /***/ 575:
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"panel-body\">\r\n    <form class=\"form-horizontal\"\r\n          novalidate\r\n          (ngSubmit)=\"saveEvent()\"\r\n          [formGroup]=\"eventForm\">\r\n        <fieldset>\r\n            <div class=\"form-group\">\r\n                <div class=\"col-md-4 col-md-offset-2\">\r\n                    <span>\r\n                        <button class=\"btn btn-primary\"\r\n                                type=\"submit\"\r\n                                style=\"width:80px;margin-right:10px\"\r\n                                [disabled]='!eventForm.valid'>\r\n                            Save\r\n                        </button>\r\n                    </span>\r\n                     <span *ngIf=\"eventIdFromRouter > 0\">\r\n                        <a class=\"btn btn-default\"\r\n                            style=\"width:80px\"\r\n                            (click)=\"deleteEvent()\">\r\n                            Delete\r\n                        </a>\r\n                    </span>\r\n                    <span>\r\n                        <a class=\"btn btn-default\"\r\n                            style=\"width:80px\"\r\n                            (click)=\"gotoEventList()\">\r\n                            EventList\r\n                        </a>\r\n                    </span>\r\n                    <span *ngIf=\"eventIdFromRouter === 0\">\r\n                        <a class=\"btn btn-default\"\r\n                            style=\"width:80px\"\r\n                            (click)=\"generateRandomEvent()\">\r\n                            Generate\r\n                        </a>\r\n                    </span>\r\n                    <span class='has-error' *ngIf='statusMessage'>\r\n                        {{statusMessage}}\r\n                    </span>\r\n                </div>\r\n            </div>\r\n\r\n            <div class=\"form-group\"\r\n                 [ngClass]=\"{'has-error': displayMessage.eventName }\">\r\n                 <label class=\"col-md-2 control-label\" for=\"eventNameId\">\r\n                     Event Name\r\n                 </label>\r\n\r\n                 <div class=\"col-md-8\">\r\n                     <input class=\"form-control\"\r\n                            type=\"text\"\r\n                            placeholder=\"Name (required)\"\r\n                            formControlName=\"eventName\" />\r\n                     <span class=\"help-block\" *ngIf=\"displayMessage.eventName\">\r\n                         {{displayMessage.eventName}}\r\n                     </span>\r\n                 </div>\r\n            </div>\r\n\r\n            <div class=\"form-group\"\r\n                 [ngClass]=\"{'has-error': displayMessage.eventType }\">\r\n                 <label class=\"col-md-2 control-label\" for=\"eventTypeId\">\r\n                     Event Type\r\n                 </label>\r\n        \r\n                 <div class=\"col-md-8\">\r\n                        <select class=\"form-control\" \r\n                                formControlName=\"eventType\">\r\n                            <option *ngFor=\"let eventType of eventTypes\" [value]=\"eventType\">\r\n                                {{eventType}}\r\n                            </option>\r\n                        </select>\r\n                     <span class=\"help-block\" *ngIf=\"displayMessage.eventType\">\r\n                         {{displayMessage.eventType}}\r\n                     </span>\r\n                 </div>\r\n            </div>\r\n\r\n        </fieldset>\r\n    </form>\r\n    <div class=\"has-error\" *ngIf=\"errorMessage\">{{errorMessage}}</div>\r\n</div>"
+module.exports = "<div *ngIf='event'>\r\n    <div class='panel-body'>\r\n        <div class='table-responsive'>\r\n            <table class='table'>\r\n                <tbody>\r\n                    <tr></tr>\r\n                    <tr>Event Name: {{event.eventName}}</tr>\r\n                    <tr>Event Type: {{event.eventType}}</tr>\r\n                </tbody>\r\n            </table>   \r\n        </div>\r\n    </div>\r\n\r\n    <div class='panel-footer'>\r\n        <button class=\"btn btn-default\" [routerLink]=\"['/eventlist']\" style=\"width:80px\">\r\n            Back\r\n        </button>\r\n        <a class=\"btn btn-primary\" [routerLink]=\"['/eventedit', event.id]\" style=\"width:80px;margin-left:10px\">\r\n            Edit\r\n        </a>\r\n    </div>\r\n</div>"
 
 /***/ }),
 
 /***/ 576:
 /***/ (function(module, exports) {
 
-module.exports = "\r\n<div class='panel-body'>\r\n    <div class='row' style=\"margin-bottom:4px\">\r\n        <div class='col-md-4'>\r\n            <input type='text' placeholder='Filter by' [(ngModel)]='listFilter' />\r\n            <button class=\"btn btn-primary\" [routerLink]=\"['/eventedit', 0]\">\r\n                New\r\n            </button>\r\n        </div>\r\n    </div>\r\n\r\n    <div class='has-error' *ngIf='errorMessage'>\r\n        {{errorMessage}}\r\n    </div>\r\n\r\n    <div class='table-responsive'>\r\n        <table class='table' *ngIf='events && events.length'>\r\n            <thead>\r\n                <tr>\r\n                    <th>Event Name</th>\r\n                    <th>Event Description</th>\r\n                </tr>\r\n            </thead>\r\n            <tbody>\r\n                <tr *ngFor='let event of events | pipeeventFilter:listFilter'>\r\n                    <td><a [routerLink]=\"['/eventdetail', event.id]\">{{event.eventName}}</a></td>\r\n                    <td>{{event.eventType}}</td>\r\n                </tr>\r\n            </tbody>\r\n        </table>   \r\n    </div>\r\n\r\n</div>"
+module.exports = "<form class=\"form-horizontal\"\r\n        novalidate\r\n        (ngSubmit)=\"saveEvent()\"\r\n        [formGroup]=\"eventForm\">\r\n    <div class=\"panel-body\">\r\n        <fieldset>\r\n            <div class=\"form-group\"\r\n                [ngClass]=\"{'has-error': displayMessage.eventName }\">\r\n                <label class=\"col-md-2 control-label\" for=\"eventNameId\">\r\n                    Event Name\r\n                </label>\r\n\r\n                <div class=\"col-md-8\">\r\n                    <input class=\"form-control\"\r\n                            type=\"text\"\r\n                            placeholder=\"Name (required)\"\r\n                            formControlName=\"eventName\" />\r\n                    <span class=\"help-block\" *ngIf=\"displayMessage.eventName\">\r\n                        {{displayMessage.eventName}}\r\n                    </span>\r\n                </div>\r\n            </div>\r\n            <div class=\"form-group\"\r\n                [ngClass]=\"{'has-error': displayMessage.eventType }\">\r\n                <label class=\"col-md-2 control-label\" for=\"eventTypeId\">\r\n                    Event Type\r\n                </label>\r\n        \r\n                <div class=\"col-md-8\">\r\n                        <select class=\"form-control\" \r\n                                formControlName=\"eventType\">\r\n                            <option *ngFor=\"let eventType of eventTypes\" [value]=\"eventType\">\r\n                                {{eventType}}\r\n                            </option>\r\n                        </select>\r\n                    <span class=\"help-block\" *ngIf=\"displayMessage.eventType\">\r\n                        {{displayMessage.eventType}}\r\n                    </span>\r\n                </div>\r\n            </div>\r\n            <div class=\"has-error\" *ngIf=\"errorMessage\">\r\n                {{errorMessage}}\r\n            </div>\r\n        </fieldset>\r\n    </div>\r\n    <div class=\"panel-footer\">\r\n        <div class=\"form-group\">\r\n            <button class=\"btn btn-primary\"\r\n                    type=\"submit\"\r\n                    style=\"width:80px;margin-right:10px\"\r\n                    [disabled]='!eventForm.valid'>\r\n                Save\r\n            </button>\r\n            <a *ngIf=\"eventIdFromRouter > 0\" \r\n                class=\"btn btn-default\"\r\n                style=\"width:80px\"\r\n                (click)=\"deleteEvent()\">\r\n                Delete\r\n            </a>\r\n            <a class=\"btn btn-default\"\r\n                style=\"width:80px\"\r\n                (click)=\"gotoEventList()\">\r\n                EventList\r\n            </a>\r\n            <a *ngIf=\"eventIdFromRouter === 0\"\r\n                class=\"btn btn-default\"\r\n                style=\"width:80px\"\r\n                (click)=\"generateRandomEvent()\">\r\n                Generate\r\n            </a>\r\n            <span class='has-error' *ngIf='statusMessage'>\r\n                {{statusMessage}}\r\n            </span>\r\n        </div>\r\n    </div>\r\n</form>"
 
 /***/ }),
 
-/***/ 833:
+/***/ 577:
+/***/ (function(module, exports) {
+
+module.exports = "\r\n<div class='panel-body'>\r\n    <div class='row' style=\"margin-bottom:4px\">\r\n        <div class='col-md-4'>\r\n            <input type='text' placeholder='Filter by' [(ngModel)]='listFilter' />\r\n        </div>\r\n    </div>\r\n\r\n    <div class='has-error' *ngIf='errorMessage'>\r\n        {{errorMessage}}\r\n    </div>\r\n\r\n    <div class='table-responsive'>\r\n        <table class='table' *ngIf='events && events.length'>\r\n            <thead>\r\n                <tr>\r\n                    <th>Event Name</th>\r\n                    <th>Event Description</th>\r\n                </tr>\r\n            </thead>\r\n            <tbody>\r\n                <tr *ngFor='let event of events | pipeeventFilter:listFilter'>\r\n                    <td><a [routerLink]=\"['/eventdetail', event.id]\">{{event.eventName}}</a></td>\r\n                    <td>{{event.eventType}}</td>\r\n                </tr>\r\n            </tbody>\r\n        </table>   \r\n    </div>\r\n</div>\r\n\r\n<div class=\"panel-footer\">\r\n    <button class=\"btn btn-primary\" [routerLink]=\"['/eventedit', 0]\">\r\n        New\r\n    </button>\r\n    <button class=\"btn btn-default\" [routerLink]=\"['/about']\" style=\"float: right\">\r\n        About \r\n    </button>\r\n</div>"
+
+/***/ }),
+
+/***/ 578:
+/***/ (function(module, exports) {
+
+module.exports = "<form style=\"margin-left:2mm\">\r\n    <div class=\"form-group\">\r\n        <label class=\"control-label\">Website: </label>\r\n        eventsrecorder.azurewebsites.net\r\n    </div>\r\n    <div class=\"form-group\">\r\n        <label class=\"control-label\">Version: </label>\r\n        0.5\r\n    </div>\r\n    <div class=\"form-group\">\r\n        <label class=\"control-label\">Author: </label>\r\n        FD\r\n    </div>\r\n</form>"
+
+/***/ }),
+
+/***/ 835:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(388);
@@ -868,5 +915,5 @@ module.exports = __webpack_require__(388);
 
 /***/ })
 
-},[833]);
+},[835]);
 //# sourceMappingURL=main.bundle.js.map
