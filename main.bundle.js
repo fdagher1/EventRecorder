@@ -44,7 +44,7 @@ var ServiceEventData = (function () {
     ServiceEventData.prototype.getEvents = function () {
         return this.http.get(this.baseUrl)
             .map(this.extractData)
-            .do(function (data) { return console.log('getEvents: ' + JSON.stringify(data)); })
+            .do(function (data) { return console.log('Service: getEvents: ' + JSON.stringify(data)); })
             .catch(this.handleError);
     };
     ServiceEventData.prototype.getEvent = function (id) {
@@ -54,7 +54,7 @@ var ServiceEventData = (function () {
         var url = this.baseUrl + "/" + id;
         return this.http.get(url)
             .map(this.extractData)
-            .do(function (data) { return console.log('getEvent: ' + JSON.stringify(data)); })
+            .do(function (data) { return console.log('Service: getEvent: ' + JSON.stringify(data)); })
             .catch(this.handleError);
     };
     ServiceEventData.prototype.deleteEvent = function (id) {
@@ -62,7 +62,7 @@ var ServiceEventData = (function () {
         var options = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["RequestOptions"]({ headers: headers });
         var url = this.baseUrl + "/" + id;
         return this.http.delete(url, options)
-            .do(function (data) { return console.log('deleteEvent: ' + JSON.stringify(data)); })
+            .do(function (data) { return console.log('Service: deleteEvent: ' + JSON.stringify(data)); })
             .catch(this.handleError);
     };
     ServiceEventData.prototype.saveEvent = function (event) {
@@ -77,14 +77,14 @@ var ServiceEventData = (function () {
         event.id = undefined;
         return this.http.post(this.baseUrl, event, options)
             .map(this.extractData)
-            .do(function (data) { return console.log('createEvent: ' + JSON.stringify(data)); })
+            .do(function (data) { return console.log('Service: createEvent: ' + JSON.stringify(data)); })
             .catch(this.handleError);
     };
     ServiceEventData.prototype.updateEvent = function (event, options) {
         var url = this.baseUrl + "/" + event.id;
         return this.http.put(url, event, options)
             .map(function () { return event; })
-            .do(function (data) { return console.log('updateEvent: ' + JSON.stringify(data)); })
+            .do(function (data) { return console.log('Service: updateEvent: ' + JSON.stringify(data)); })
             .catch(this.handleError);
     };
     ServiceEventData.prototype.extractData = function (response) {
@@ -96,10 +96,21 @@ var ServiceEventData = (function () {
         return __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__["Observable"].throw(error.json().error || 'Server error');
     };
     ServiceEventData.prototype.initializeEvent = function () {
+        var date = new Date();
+        var dateISOformat = date.toISOString();
+        var dateISOformatArray = dateISOformat.split("T");
+        var dateISOformatDateOnly = dateISOformatArray[0];
         return {
             id: 0,
             eventName: null,
-            eventType: null
+            eventType: "SelectEventType",
+            eventStart: dateISOformatDateOnly,
+            eventEnd: dateISOformatDateOnly,
+            eventCity: null,
+            eventState: null,
+            eventCountry: null,
+            eventCost: null,
+            eventComment: null
         };
     };
     ServiceEventData = __decorate([
@@ -321,32 +332,74 @@ var DataEvent = (function () {
             {
                 'id': 1,
                 'eventName': 'Yanni Concert',
-                'eventType': 'Concert/Play'
+                'eventType': 'Concert/Play',
+                'eventStart': '2017-04-01',
+                'eventEnd': '2017-04-01',
+                'eventCity': 'Washington DC',
+                'eventState': 'DC',
+                'eventCountry': 'United States',
+                'eventCost': '47',
+                'eventComment': 'Amazing music, great seats'
             },
             {
                 'id': 2,
-                'eventName': 'Ski at Liberty M',
-                'eventType': 'Activity'
+                'eventName': 'Ski at Liberty Mountain',
+                'eventType': 'Activity',
+                'eventStart': '2016-02-03',
+                'eventEnd': '2016-02-03',
+                'eventCity': 'Littlestown',
+                'eventState': 'PA',
+                'eventCountry': 'United States',
+                'eventCost': '120',
+                'eventComment': 'Tiring but fun, nice company'
             },
             {
                 'id': 3,
                 'eventName': 'Steakhouse',
-                'eventType': 'Restaurant'
+                'eventType': 'Restaurant',
+                'eventStart': '2016-06-02',
+                'eventEnd': '2016-06-02',
+                'eventCity': 'Washington DC',
+                'eventState': 'DC',
+                'eventCountry': 'United States',
+                'eventCost': '138',
+                'eventComment': 'Very good food. Had to wear a suit from the restaurant'
             },
             {
                 'id': 4,
-                'eventName': 'Circa',
-                'eventType': 'Restaurant'
+                'eventName': 'Hotel Elephant',
+                'eventType': 'Hotel',
+                'eventStart': '2016-01-18',
+                'eventEnd': '2016-01-21',
+                'eventCity': "Lisbon",
+                'eventState': 'Lisbon',
+                'eventCountry': 'Portugal',
+                'eventCost': '120/night',
+                'eventComment': 'Central location, small rooms'
             },
             {
                 'id': 5,
-                'eventName': 'Lisbon',
-                'eventType': 'Site'
+                'eventName': 'Lisbon Sites',
+                'eventType': 'Site',
+                'eventStart': '2016-01-19',
+                'eventEnd': '2016-01-19',
+                'eventCity': 'Lisbon',
+                'eventState': 'Lisbon',
+                'eventCountry': 'Portugal',
+                'eventCost': 'free',
+                'eventComment': 'Lots of walking'
             },
             {
                 'id': 6,
-                'eventName': 'San Juan',
-                'eventType': 'Site'
+                'eventName': 'San Juan Sites',
+                'eventType': 'Site',
+                'eventStart': '2016-02-17',
+                'eventEnd': '2016-02-17',
+                'eventCity': 'San Juan',
+                'eventState': 'San Juan',
+                'eventCountry': 'Puerto Rico',
+                'eventCost': 'free',
+                'eventComment': ''
             }
         ];
         return { events: events };
@@ -546,6 +599,21 @@ var EventEditComponent = (function () {
             },
             eventType: {
                 required: 'Event name is required.'
+            },
+            eventStart: {
+                required: 'Event start date is required.'
+            },
+            eventEnd: {
+                required: 'Event end date is required.'
+            },
+            eventCity: {
+                required: 'Event city name is required.'
+            },
+            eventState: {
+                required: 'Event state name is required.'
+            },
+            eventCountry: {
+                required: 'Event country name is required.'
             }
         };
         this.genericValidator = new __WEBPACK_IMPORTED_MODULE_7__shared_generic_validator__["a" /* GenericValidator */](this.validationMessages);
@@ -556,7 +624,14 @@ var EventEditComponent = (function () {
         //Create Reactive Form
         this.eventForm = this.fb.group({
             eventName: ['', [__WEBPACK_IMPORTED_MODULE_1__angular_forms__["a" /* Validators */].required, __WEBPACK_IMPORTED_MODULE_1__angular_forms__["a" /* Validators */].minLength(3), __WEBPACK_IMPORTED_MODULE_1__angular_forms__["a" /* Validators */].maxLength(50)]],
-            eventType: ['', __WEBPACK_IMPORTED_MODULE_1__angular_forms__["a" /* Validators */].required]
+            eventType: ['', __WEBPACK_IMPORTED_MODULE_1__angular_forms__["a" /* Validators */].required],
+            eventStart: ['', __WEBPACK_IMPORTED_MODULE_1__angular_forms__["a" /* Validators */].required],
+            eventEnd: ['', __WEBPACK_IMPORTED_MODULE_1__angular_forms__["a" /* Validators */].required],
+            eventCity: ['', __WEBPACK_IMPORTED_MODULE_1__angular_forms__["a" /* Validators */].required],
+            eventState: ['', __WEBPACK_IMPORTED_MODULE_1__angular_forms__["a" /* Validators */].required],
+            eventCountry: ['', __WEBPACK_IMPORTED_MODULE_1__angular_forms__["a" /* Validators */].required],
+            eventCost: [''],
+            eventComment: ['']
         });
         //Get parameter passed through the URL and then call get event to populate sheet with event data
         this.sub = this.route.params.subscribe(function (params) {
@@ -599,16 +674,54 @@ var EventEditComponent = (function () {
     };
     //Create random event object and add to view
     EventEditComponent.prototype.generateRandomEvent = function () {
-        var gEvent = { id: 0, eventName: "Event Name", eventType: "Activity" };
+        var gEvent = { id: 0, eventName: "Scuba Diving",
+            eventType: "Activity",
+            eventStart: this.getISOString(new Date()),
+            eventEnd: this.getISOString(new Date()),
+            eventCity: "Bandos Island",
+            eventState: "Maldives",
+            eventCountry: "Maldvies",
+            eventCost: "$110",
+            eventComment: "Saw a small shark!" };
         this.eventForm.controls['eventName'].setValue(gEvent.eventName);
         this.eventForm.controls['eventName'].markAsDirty();
         this.eventForm.controls['eventType'].setValue(gEvent.eventType);
         this.eventForm.controls['eventType'].markAsDirty();
+        this.eventForm.controls['eventStart'].setValue(gEvent.eventStart);
+        this.eventForm.controls['eventStart'].markAsDirty();
+        this.eventForm.controls['eventEnd'].setValue(gEvent.eventEnd);
+        this.eventForm.controls['eventEnd'].markAsDirty();
+        this.eventForm.controls['eventCity'].setValue(gEvent.eventCity);
+        this.eventForm.controls['eventCity'].markAsDirty();
+        this.eventForm.controls['eventState'].setValue(gEvent.eventState);
+        this.eventForm.controls['eventState'].markAsDirty();
+        this.eventForm.controls['eventCountry'].setValue(gEvent.eventCountry);
+        this.eventForm.controls['eventCountry'].markAsDirty();
+        this.eventForm.controls['eventCost'].setValue(gEvent.eventCost);
+        this.eventForm.controls['eventCost'].markAsDirty();
+        this.eventForm.controls['eventComment'].setValue(gEvent.eventComment);
+        this.eventForm.controls['eventComment'].markAsDirty();
     };
     //Update form values with event data
     EventEditComponent.prototype.onEventRetrieved = function (event) {
         this.event = event;
-        this.eventForm.patchValue({ eventName: this.event.eventName, eventType: this.event.eventType });
+        console.log("Component: attempting to add event: " + JSON.stringify(this.event));
+        this.eventForm.patchValue({ eventName: this.event.eventName,
+            eventType: this.event.eventType,
+            eventStart: this.event.eventStart,
+            eventEnd: this.event.eventEnd,
+            eventCity: this.event.eventCity,
+            eventState: this.event.eventState,
+            eventCountry: this.event.eventCountry,
+            eventCost: this.event.eventCost,
+            eventComment: this.event.eventComment });
+        console.log("done");
+    };
+    EventEditComponent.prototype.getISOString = function (aneventdate) {
+        var dateISOformat = aneventdate.toISOString();
+        var dateISOformatArray = dateISOformat.split("T");
+        var dateISOformatDateOnly = dateISOformatArray[0];
+        return dateISOformatDateOnly;
     };
     //Display successful save message for 1 second, then reset form entries and navigate to form
     EventEditComponent.prototype.onEventSaved = function () {
@@ -708,10 +821,18 @@ var PipeEventFilter = (function () {
     function PipeEventFilter() {
     }
     PipeEventFilter.prototype.transform = function (value, filterBy) {
-        filterBy = filterBy ? filterBy.toLocaleLowerCase() : null;
-        return filterBy ? value.filter(function (product) {
-            return product.eventName.toLocaleLowerCase().indexOf(filterBy) !== -1;
-        }) : value;
+        if (filterBy) {
+            filterBy = filterBy.toLocaleLowerCase();
+        }
+        else {
+            filterBy = null;
+        }
+        if (filterBy) {
+            return value.filter(function (product) { return product.eventName.toLocaleLowerCase().indexOf(filterBy) !== -1; });
+        }
+        else {
+            return value;
+        }
     };
     PipeEventFilter = __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Pipe"])({
@@ -897,14 +1018,14 @@ var environment = {
 /***/ 575:
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf='event'>\r\n    <div class='panel-body'>\r\n        <div class='table-responsive'>\r\n            <table class='table'>\r\n                <tbody>\r\n                    <tr></tr>\r\n                    <tr>Event Name: {{event.eventName}}</tr>\r\n                    <tr>Event Type: {{event.eventType}}</tr>\r\n                </tbody>\r\n            </table>   \r\n        </div>\r\n    </div>\r\n\r\n    <div class='panel-footer' style=\"position: fixed; bottom: 0px; width: 100%; height: 60px;\">\r\n        <button class=\"btn btn-default\" [routerLink]=\"['/eventlist']\" style=\"width:80px\">\r\n            Back\r\n        </button>\r\n        <a class=\"btn btn-primary\" [routerLink]=\"['/eventedit', event.id]\" style=\"width:80px;margin-left:10px\">\r\n            Edit\r\n        </a>\r\n    </div>\r\n</div>"
+module.exports = "<div *ngIf='event'>\r\n    <div class='panel-body'>\r\n        <div class='table-responsive'>\r\n            <table class='table'>\r\n                <tbody>\r\n                    <tr></tr>\r\n                    <tr>Event Name: {{event.eventName}}</tr>\r\n                    <tr>Event Type: {{event.eventType}}</tr>\r\n                    <tr>Event Start: {{event.eventStart}}</tr>\r\n                    <tr>Event End: {{event.eventEnd}}</tr>\r\n                    <tr>Event City: {{event.eventCity}}</tr>\r\n                    <tr>Event State: {{event.eventState}}</tr>\r\n                    <tr>Event Country: {{event.eventCountry}}</tr>\r\n                    <tr>Event Cost: {{event.eventCost}}</tr>\r\n                    <tr>Event Comment: {{event.eventComment}}</tr>\r\n                </tbody>\r\n            </table>   \r\n        </div>\r\n    </div>\r\n\r\n    <div class='panel-footer' style=\"position: fixed; bottom: 0px; width: 100%; height: 60px;\">\r\n        <button class=\"btn btn-default\" [routerLink]=\"['/eventlist']\" style=\"width:80px\">\r\n            Back\r\n        </button>\r\n        <a class=\"btn btn-primary\" [routerLink]=\"['/eventedit', event.id]\" style=\"width:80px;margin-left:10px\">\r\n            Edit\r\n        </a>\r\n    </div>\r\n</div>"
 
 /***/ }),
 
 /***/ 576:
 /***/ (function(module, exports) {
 
-module.exports = "<form class=\"form-horizontal\"\r\n        novalidate\r\n        (ngSubmit)=\"saveEvent()\"\r\n        [formGroup]=\"eventForm\">\r\n    <div class=\"panel-body\">\r\n        <fieldset>\r\n            <div class=\"form-group\"\r\n                [ngClass]=\"{'has-error': displayMessage.eventName }\">\r\n                <label class=\"col-md-2 control-label\" for=\"eventNameId\">\r\n                    Event Name\r\n                </label>\r\n\r\n                <div class=\"col-md-8\">\r\n                    <input class=\"form-control\"\r\n                            type=\"text\"\r\n                            placeholder=\"Name (required)\"\r\n                            formControlName=\"eventName\" />\r\n                    <span class=\"help-block\" *ngIf=\"displayMessage.eventName\">\r\n                        {{displayMessage.eventName}}\r\n                    </span>\r\n                </div>\r\n            </div>\r\n            <div class=\"form-group\"\r\n                [ngClass]=\"{'has-error': displayMessage.eventType }\">\r\n                <label class=\"col-md-2 control-label\" for=\"eventTypeId\">\r\n                    Event Type\r\n                </label>\r\n        \r\n                <div class=\"col-md-8\">\r\n                        <select class=\"form-control\" \r\n                                formControlName=\"eventType\">\r\n                            <option *ngFor=\"let eventType of eventTypes\" [value]=\"eventType\">\r\n                                {{eventType}}\r\n                            </option>\r\n                        </select>\r\n                    <span class=\"help-block\" *ngIf=\"displayMessage.eventType\">\r\n                        {{displayMessage.eventType}}\r\n                    </span>\r\n                </div>\r\n            </div>\r\n            <div class=\"has-error\" *ngIf=\"errorMessage\">\r\n                {{errorMessage}}\r\n            </div>\r\n        </fieldset>\r\n    </div>\r\n    <div class=\"panel-footer\" style=\"position: fixed; bottom: 0px; width: 100%; height: 60px;\">\r\n        <div class=\"form-group\">\r\n            <button class=\"btn btn-primary\"\r\n                    type=\"submit\"\r\n                    style=\"width:80px;margin-right:10px\"\r\n                    [disabled]='!eventForm.valid'>\r\n                Save\r\n            </button>\r\n            <a *ngIf=\"eventIdFromRouter > 0\" \r\n                class=\"btn btn-default\"\r\n                style=\"width:80px\"\r\n                (click)=\"deleteEvent()\">\r\n                Delete\r\n            </a>\r\n            <a class=\"btn btn-default\"\r\n                style=\"width:80px\"\r\n                (click)=\"gotoEventList()\">\r\n                EventList\r\n            </a>\r\n            <a *ngIf=\"eventIdFromRouter === 0\"\r\n                class=\"btn btn-default\"\r\n                style=\"width:80px\"\r\n                (click)=\"generateRandomEvent()\">\r\n                Generate\r\n            </a>\r\n            <span class='has-error' *ngIf='statusMessage'>\r\n                {{statusMessage}}\r\n            </span>\r\n        </div>\r\n    </div>\r\n</form>"
+module.exports = "<style>\r\n\r\n.col-xs-4, .col-xs-6, .col-xs-12 {\r\n    padding-left: 5px;\r\n    padding-right: 5px;\r\n    \r\n}\r\n\r\n.verticalspacing-5px {\r\n    padding-top: 5px;\r\n    padding-bottom: 5px;\r\n}\r\n\r\n\r\n</style>\r\n\r\n<form novalidate\r\n        (ngSubmit)=\"saveEvent()\"\r\n        [formGroup]=\"eventForm\">\r\n    <div class=\"panel-body\">\r\n        <fieldset>\r\n            <div class=\"form-group\">          \r\n                <div class=\"col-xs-6 col-lg-6 verticalspacing-5px\">\r\n                    <select class=\"form-control\" \r\n                            formControlName=\"eventType\">\r\n                        <option value=\"SelectEventType\" disabled>Select Event Type</option>\r\n                        <option *ngFor=\"let eventType of eventTypes\" [value]=\"eventType\">{{eventType}}</option>\r\n                    </select>\r\n                </div>\r\n                <div class=\"col-xs-6 col-lg-6 verticalspacing-5px\" [ngClass]=\"{'has-error': displayMessage.eventName }\">\r\n                    <input class=\"form-control\"\r\n                            formControlName=\"eventName\"\r\n                            type=\"text\"\r\n                            placeholder=\"Event Name (required)\" />\r\n                    <span class=\"help-block\" *ngIf=\"displayMessage.eventName\">{{displayMessage.eventName}}</span>\r\n                </div>\r\n            </div>\r\n\r\n            <div class=\"form-group\">\r\n                <div class=\"col-xs-6 col-lg-6 verticalspacing-5px\">\r\n                    <input class=\"form-control\"\r\n                            formControlName=\"eventStart\" \r\n                            type=\"date\"\r\n                            name=\"eventStart\" />\r\n                </div>\r\n                <div class=\"col-xs-6 col-lg-6 verticalspacing-5px\">\r\n                    <input class=\"form-control\"\r\n                            formControlName=\"eventEnd\" \r\n                            type=\"date\"\r\n                            name=\"eventEnd\" />\r\n                </div>\r\n            </div>\r\n\r\n            <div class=\"form-group col-xs-6 col-lg-6\">\r\n                <div class=\"verticalspacing-5px\" >\r\n                    <input class=\"form-control\"\r\n                            formControlName=\"eventCity\"\r\n                            type=\"text\"\r\n                            placeholder=\"City Name\"\r\n                            name=\"eventCity\"/>\r\n                </div>\r\n                <div class=\"verticalspacing-5px\">\r\n                    <input class=\"form-control\"\r\n                            formControlName=\"eventState\"\r\n                            type=\"text\"\r\n                            placeholder=\"State Name\"\r\n                            name=\"eventState\"/>\r\n                </div>\r\n                <div class=\"verticalspacing-5px\">\r\n                    <input class=\"form-control\"\r\n                            formControlName=\"eventCountry\"\r\n                            type=\"text\"\r\n                            placeholder=\"Country Name\"\r\n                            name=\"eventCountry\"/>\r\n                </div>\r\n            </div>\r\n\r\n            <div class=\"form-group col-xs-6 col-lg-6\">\r\n                <div class=\"verticalspacing-5px\">\r\n                    <input class=\"form-control\"\r\n                            formControlName=\"eventCost\"\r\n                            type=\"text\"\r\n                            placeholder=\"Cost\"\r\n                            name=\"eventCost\"/>\r\n                </div>\r\n                <div class=\"verticalspacing-5px\">\r\n                    <textarea class=\"form-control\"\r\n                            formControlName=\"eventComment\"\r\n                            placeholder=\"Comments\"\r\n                            name=\"eventComment\"\r\n                            cols=\"20\"\r\n                            rows=\"3\"></textarea>\r\n                </div>\r\n            </div>\r\n\r\n            <div class=\"has-error\" *ngIf=\"errorMessage\">\r\n                {{errorMessage}}\r\n            </div>\r\n\r\n        </fieldset>\r\n    </div>\r\n    <div class=\"panel-footer\" style=\"position: fixed; bottom: 0px; width: 100%; height: 60px;\">\r\n        <div class=\"form-group\">\r\n            <button class=\"btn btn-primary\"\r\n                    type=\"submit\"\r\n                    style=\"width:80px;margin-right:10px\"\r\n                    [disabled]='!eventForm.valid'>\r\n                Save\r\n            </button>\r\n            <a *ngIf=\"eventIdFromRouter > 0\" \r\n                class=\"btn btn-default\"\r\n                style=\"width:80px\"\r\n                (click)=\"deleteEvent()\">\r\n                Delete\r\n            </a>\r\n            <a class=\"btn btn-default\"\r\n                style=\"width:80px\"\r\n                (click)=\"gotoEventList()\">\r\n                EventList\r\n            </a>\r\n            <a *ngIf=\"eventIdFromRouter === 0\"\r\n                class=\"btn btn-default\"\r\n                style=\"width:80px\"\r\n                (click)=\"generateRandomEvent()\">\r\n                Generate\r\n            </a>\r\n            <span class='has-error' *ngIf='statusMessage'>\r\n                {{statusMessage}}\r\n            </span>\r\n        </div>\r\n    </div>\r\n</form>"
 
 /***/ }),
 
