@@ -37,55 +37,45 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 var ServiceEventData = (function () {
+    //Constructor
     function ServiceEventData(http) {
         this.http = http;
+        //Used as the URL for the InMemoryDbService database 
         this.baseUrl = 'api/events';
     }
+    //Get all events
     ServiceEventData.prototype.getEvents = function () {
-        return this.http.get(this.baseUrl)
-            .map(this.extractData)
-            .do(function (data) { return console.log('Service: getEvents: ' + JSON.stringify(data)); })
-            .catch(this.handleError);
+        return this.http.get(this.baseUrl).map(this.extractData).do(function (data) { return console.log('Service: getEvents: ' + JSON.stringify(data)); }).catch(this.handleError);
     };
+    //Get one event. If id=0, return new/blank event
     ServiceEventData.prototype.getEvent = function (id) {
         if (id === 0) {
-            return __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__["Observable"].of(this.initializeEvent());
+            return __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__["Observable"].of(this.initializeNewEvent());
         }
-        var url = this.baseUrl + "/" + id;
-        return this.http.get(url)
-            .map(this.extractData)
-            .do(function (data) { return console.log('Service: getEvent: ' + JSON.stringify(data)); })
-            .catch(this.handleError);
+        else {
+            var url = this.baseUrl + "/" + id;
+            return this.http.get(url).map(this.extractData).do(function (data) { return console.log('Service: getEvent: ' + JSON.stringify(data)); }).catch(this.handleError);
+        }
     };
+    //Delete event
     ServiceEventData.prototype.deleteEvent = function (id) {
         var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["Headers"]({ 'Content-Type': 'application/json' });
         var options = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["RequestOptions"]({ headers: headers });
         var url = this.baseUrl + "/" + id;
-        return this.http.delete(url, options)
-            .do(function (data) { return console.log('Service: deleteEvent: ' + JSON.stringify(data)); })
-            .catch(this.handleError);
+        return this.http.delete(url, options).do(function (data) { return console.log('Service: deleteEvent: ' + JSON.stringify(data)); }).catch(this.handleError);
     };
+    //Save event. If id=0, save as new event, if not, update old event
     ServiceEventData.prototype.saveEvent = function (event) {
         var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["Headers"]({ 'Content-Type': 'application/json' });
         var options = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["RequestOptions"]({ headers: headers });
         if (event.id === 0) {
-            return this.createEvent(event, options);
+            event.id = undefined;
+            return this.http.post(this.baseUrl, event, options).map(this.extractData).do(function (data) { return console.log('Service: createEvent: ' + JSON.stringify(data)); }).catch(this.handleError);
         }
-        return this.updateEvent(event, options);
-    };
-    ServiceEventData.prototype.createEvent = function (event, options) {
-        event.id = undefined;
-        return this.http.post(this.baseUrl, event, options)
-            .map(this.extractData)
-            .do(function (data) { return console.log('Service: createEvent: ' + JSON.stringify(data)); })
-            .catch(this.handleError);
-    };
-    ServiceEventData.prototype.updateEvent = function (event, options) {
-        var url = this.baseUrl + "/" + event.id;
-        return this.http.put(url, event, options)
-            .map(function () { return event; })
-            .do(function (data) { return console.log('Service: updateEvent: ' + JSON.stringify(data)); })
-            .catch(this.handleError);
+        else {
+            var url = this.baseUrl + "/" + event.id;
+            return this.http.put(url, event, options).map(function () { return event; }).do(function (data) { return console.log('Service: updateEvent: ' + JSON.stringify(data)); }).catch(this.handleError);
+        }
     };
     ServiceEventData.prototype.extractData = function (response) {
         var body = response.json();
@@ -95,17 +85,13 @@ var ServiceEventData = (function () {
         console.error(error);
         return __WEBPACK_IMPORTED_MODULE_2_rxjs_Observable__["Observable"].throw(error.json().error || 'Server error');
     };
-    ServiceEventData.prototype.initializeEvent = function () {
-        var date = new Date();
-        var dateISOformat = date.toISOString();
-        var dateISOformatArray = dateISOformat.split("T");
-        var dateISOformatDateOnly = dateISOformatArray[0];
+    ServiceEventData.prototype.initializeNewEvent = function () {
         return {
             id: 0,
             eventName: null,
             eventType: "SelectEventType",
-            eventStart: dateISOformatDateOnly,
-            eventEnd: dateISOformatDateOnly,
+            eventStart: (new Date()).toISOString().split("T")[0],
+            eventEnd: (new Date()).toISOString().split("T")[0],
             eventCity: null,
             eventState: null,
             eventCountry: null,
@@ -254,7 +240,7 @@ var AppComponent = (function () {
     AppComponent = __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
             selector: 'app-root',
-            template: "\n\n        \n        <div class='panel panel-primary'>\n        \n            <div class='panel-heading' style=\"position: fixed; width: 100%; height: 40px; margin-top: 0px; z-index: 1;\">\n                <a [routerLink]=\"['']\" style=\"color:white;text-decoration:none;margin: 20;\"> {{pageTitle}} </a>\n\n                <button class=\"btn btn-default btn-xs\" style=\"float: right;\" (click)=\"serviceauth.login()\" *ngIf=\"!serviceauth.authenticated()\">Log In</button>\n                <button class=\"btn btn-default btn-xs\" style=\"float: right;\" (click)=\"serviceauth.logout()\" *ngIf=\"serviceauth.authenticated() && serviceauth.userProfile\">Log Out {{serviceauth.userProfile.nickname}}</button>\n                <button class=\"btn btn-default btn-xs\" style=\"float: right;\" (click)=\"serviceauth.logout()\" *ngIf=\"serviceauth.authenticated() && !serviceauth.userProfile\">Log Out </button>\n               \n            </div>                           \n            \n            <<div style=\"margin-top: 20px; z-index: -1\">\n              <router-outlet></router-outlet>\n            </div>\n\n        </div>\n\n  "
+            template: "\n        <div class='panel panel-primary'>\n        \n            <div class='panel-heading' style=\"position: fixed; width: 100%; height: 40px; margin-top: 0px; z-index: 1;\">\n                <a [routerLink]=\"['']\" style=\"color:white;text-decoration:none;margin: 20;\"> {{pageTitle}} </a>\n\n                <button class=\"btn btn-default btn-xs\" style=\"float: right;\" (click)=\"serviceauth.login()\" *ngIf=\"!serviceauth.authenticated()\">Log In</button>\n                <button class=\"btn btn-default btn-xs\" style=\"float: right;\" (click)=\"serviceauth.logout()\" *ngIf=\"serviceauth.authenticated() && serviceauth.userProfile\">Log Out {{serviceauth.userProfile.nickname}}</button>\n                <button class=\"btn btn-default btn-xs\" style=\"float: right;\" (click)=\"serviceauth.logout()\" *ngIf=\"serviceauth.authenticated() && !serviceauth.userProfile\">Log Out </button>      \n            </div>                           \n            \n            <<div style=\"margin-top: 20px; z-index: -1\">\n              <router-outlet></router-outlet>\n            </div>\n\n        </div>\n  "
         }), 
         __metadata('design:paramtypes', [(typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__service_auth_service__["a" /* ServiceAuth */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__service_auth_service__["a" /* ServiceAuth */]) === 'function' && _a) || Object])
     ], AppComponent);
@@ -270,8 +256,8 @@ var AppComponent = (function () {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_platform_browser__ = __webpack_require__(148);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_router__ = __webpack_require__(97);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_platform_browser__ = __webpack_require__(147);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_router__ = __webpack_require__(149);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__app_component__ = __webpack_require__(504);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__service_auth_service__ = __webpack_require__(334);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__events_event_module__ = __webpack_require__(507);
@@ -331,8 +317,8 @@ var DataEvent = (function () {
         var events = [
             {
                 'id': 1,
-                'eventName': 'Yanni Concert',
                 'eventType': 'Concert/Play',
+                'eventName': 'Yanni Concert at Warner Theater',
                 'eventStart': '2017-04-01',
                 'eventEnd': '2017-04-01',
                 'eventCity': 'Washington DC',
@@ -343,32 +329,32 @@ var DataEvent = (function () {
             },
             {
                 'id': 2,
-                'eventName': 'Ski at Liberty Mountain',
                 'eventType': 'Activity',
+                'eventName': 'Ski at Liberty Mountain',
                 'eventStart': '2016-02-03',
                 'eventEnd': '2016-02-03',
                 'eventCity': 'Littlestown',
                 'eventState': 'PA',
                 'eventCountry': 'United States',
                 'eventCost': '120',
-                'eventComment': 'Tiring but fun, nice company'
+                'eventComment': 'Fun but tiring, nice company'
             },
             {
                 'id': 3,
-                'eventName': 'Steakhouse',
                 'eventType': 'Restaurant',
+                'eventName': 'DC Steakhouse',
                 'eventStart': '2016-06-02',
                 'eventEnd': '2016-06-02',
                 'eventCity': 'Washington DC',
                 'eventState': 'DC',
                 'eventCountry': 'United States',
                 'eventCost': '138',
-                'eventComment': 'Very good food. Had to wear a suit from the restaurant'
+                'eventComment': 'Very good food. Suit required!'
             },
             {
                 'id': 4,
-                'eventName': 'Hotel Elephant',
                 'eventType': 'Hotel',
+                'eventName': 'Hotel Elephant',
                 'eventStart': '2016-01-18',
                 'eventEnd': '2016-01-21',
                 'eventCity': "Lisbon",
@@ -379,8 +365,8 @@ var DataEvent = (function () {
             },
             {
                 'id': 5,
-                'eventName': 'Lisbon Sites',
                 'eventType': 'Site',
+                'eventName': 'Lisbon Sites',
                 'eventStart': '2016-01-19',
                 'eventEnd': '2016-01-19',
                 'eventCity': 'Lisbon',
@@ -391,8 +377,8 @@ var DataEvent = (function () {
             },
             {
                 'id': 6,
-                'eventName': 'San Juan Sites',
                 'eventType': 'Site',
+                'eventName': 'San Juan Sites',
                 'eventStart': '2016-02-17',
                 'eventEnd': '2016-02-17',
                 'eventCity': 'San Juan',
@@ -415,13 +401,13 @@ var DataEvent = (function () {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__(97);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_router__ = __webpack_require__(149);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_angular_in_memory_web_api__ = __webpack_require__(517);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__data_event__ = __webpack_require__(506);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__eventlist_component__ = __webpack_require__(510);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__eventlist_component__ = __webpack_require__(509);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__service_eventdata_service__ = __webpack_require__(220);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__pipe_eventfilter_pipe__ = __webpack_require__(511);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__eventedit_component__ = __webpack_require__(509);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__eventedit_component__ = __webpack_require__(508);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__shared_shared_module__ = __webpack_require__(514);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return EventModule; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -451,8 +437,8 @@ var EventModule = (function () {
                 __WEBPACK_IMPORTED_MODULE_8__shared_shared_module__["a" /* SharedModule */],
                 __WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* RouterModule */].forChild([
                     { path: '', component: __WEBPACK_IMPORTED_MODULE_7__eventedit_component__["a" /* EventEditComponent */] },
-                    { path: 'eventlist', component: __WEBPACK_IMPORTED_MODULE_4__eventlist_component__["a" /* EventListComponent */] },
-                    { path: 'eventedit/:id', component: __WEBPACK_IMPORTED_MODULE_7__eventedit_component__["a" /* EventEditComponent */] },
+                    { path: 'edit/:id', component: __WEBPACK_IMPORTED_MODULE_7__eventedit_component__["a" /* EventEditComponent */] },
+                    { path: 'list', component: __WEBPACK_IMPORTED_MODULE_4__eventlist_component__["a" /* EventListComponent */] },
                     { path: '**', component: __WEBPACK_IMPORTED_MODULE_4__eventlist_component__["a" /* EventListComponent */] }
                 ]),
                 __WEBPACK_IMPORTED_MODULE_2_angular_in_memory_web_api__["a" /* InMemoryWebApiModule */].forRoot(__WEBPACK_IMPORTED_MODULE_3__data_event__["a" /* DataEvent */])
@@ -478,19 +464,9 @@ var EventModule = (function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return eventTypes; });
-var eventTypes = ["Activity", "Concert/Play", "Conference", "Hotel", "Museum", "Restaurant", "Site", "Tour", "Visit", "Work Trip"];
-//# sourceMappingURL=event.js.map
-
-/***/ }),
-
-/***/ 509:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_forms__ = __webpack_require__(137);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_router__ = __webpack_require__(97);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_forms__ = __webpack_require__(136);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_router__ = __webpack_require__(149);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_debounceTime__ = __webpack_require__(356);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_debounceTime___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_rxjs_add_operator_debounceTime__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_rxjs_add_observable_fromEvent__ = __webpack_require__(350);
@@ -500,7 +476,7 @@ var eventTypes = ["Activity", "Concert/Play", "Conference", "Hotel", "Museum", "
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_Rx__ = __webpack_require__(578);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_rxjs_Rx___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_rxjs_Rx__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__shared_generic_validator__ = __webpack_require__(513);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__event__ = __webpack_require__(508);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__model_event__ = __webpack_require__(510);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__service_eventdata_service__ = __webpack_require__(220);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return EventEditComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -532,15 +508,13 @@ var EventEditComponent = (function () {
         this.displayMessage = {};
         //Used to check if form is in View or Edit Mode
         this.editMode = false;
-        this.eventTypes = __WEBPACK_IMPORTED_MODULE_8__event__["a" /* eventTypes */];
+        this.eventTypes = __WEBPACK_IMPORTED_MODULE_8__model_event__["a" /* eventTypes */];
+        //Define validation messages
         this.validationMessages = {
-            eventName: {
-                required: 'Event name is required.',
-                minlength: 'Event name must be at least three characters',
-                maxlength: 'Event name cannot exceed 50 characters.'
-            },
             eventType: {
                 required: 'Event name is required.'
+            },
+            eventName: { required: 'Event name is required.', minlength: 'Event name must be at least three characters', maxlength: 'Event name cannot exceed 50 characters.'
             },
             eventStart: {
                 required: 'Event start date is required.'
@@ -563,10 +537,11 @@ var EventEditComponent = (function () {
     //During initialization of this component, create the form group and form components, then get event ID from URL
     EventEditComponent.prototype.ngOnInit = function () {
         var _this = this;
+        console.log("ngOnInit");
         //Create Reactive Form
         this.eventForm = this.fb.group({
-            eventName: ['', [__WEBPACK_IMPORTED_MODULE_1__angular_forms__["a" /* Validators */].required, __WEBPACK_IMPORTED_MODULE_1__angular_forms__["a" /* Validators */].minLength(3), __WEBPACK_IMPORTED_MODULE_1__angular_forms__["a" /* Validators */].maxLength(50)]],
             eventType: ['', __WEBPACK_IMPORTED_MODULE_1__angular_forms__["a" /* Validators */].required],
+            eventName: ['', [__WEBPACK_IMPORTED_MODULE_1__angular_forms__["a" /* Validators */].required, __WEBPACK_IMPORTED_MODULE_1__angular_forms__["a" /* Validators */].minLength(3), __WEBPACK_IMPORTED_MODULE_1__angular_forms__["a" /* Validators */].maxLength(50)]],
             eventStart: ['', __WEBPACK_IMPORTED_MODULE_1__angular_forms__["a" /* Validators */].required],
             eventEnd: ['', __WEBPACK_IMPORTED_MODULE_1__angular_forms__["a" /* Validators */].required],
             eventCity: ['', __WEBPACK_IMPORTED_MODULE_1__angular_forms__["a" /* Validators */].required],
@@ -575,24 +550,25 @@ var EventEditComponent = (function () {
             eventCost: [''],
             eventComment: ['']
         });
-        //Get parameter passed through the URL and then call get event to populate sheet with event data
+        //Get the event id that is passed through the URL, and then get the corresponding event to populate sheet with event data. If id=0, put sheet in edit mode
         this.sub = this.route.params.subscribe(function (params) {
-            var id = +params['id'];
-            if (isNaN(id)) {
-                id = 0;
+            if (isNaN(+params['id'])) {
+                _this.eventIdFromRouter = 0;
             }
-            _this.eventIdFromRouter = id;
-            _this.getEvent(id);
-            if (id == 0) {
-                _this.EventEditClick();
+            else {
+                _this.eventIdFromRouter = +params['id'];
+            }
+            _this.getEvent(_this.eventIdFromRouter);
+            if (_this.eventIdFromRouter == 0) {
+                _this.EditButtonClick();
             }
         });
     };
     EventEditComponent.prototype.ngAfterViewInit = function () {
         var _this = this;
+        console.log("ngAfterViewInit");
         // Watch for the blur event from any input element on the form.
-        var controlBlurs = this.formInputElements
-            .map(function (formControl) { return __WEBPACK_IMPORTED_MODULE_6_rxjs_Rx__["Observable"].fromEvent(formControl.nativeElement, 'blur'); });
+        var controlBlurs = this.formInputElements.map(function (formControl) { return __WEBPACK_IMPORTED_MODULE_6_rxjs_Rx__["Observable"].fromEvent(formControl.nativeElement, 'blur'); });
         // Merge the blur event observable with the valueChanges observable
         __WEBPACK_IMPORTED_MODULE_6_rxjs_Rx__["Observable"].merge.apply(__WEBPACK_IMPORTED_MODULE_6_rxjs_Rx__["Observable"], [this.eventForm.valueChanges].concat(controlBlurs)).debounceTime(800).subscribe(function (value) {
             _this.displayMessage = _this.genericValidator.processMessages(_this.eventForm);
@@ -600,73 +576,80 @@ var EventEditComponent = (function () {
     };
     //When done editing the event data, unsubscribe 
     EventEditComponent.prototype.ngOnDestroy = function () {
+        console.log("ngOnDestroy");
         this.sub.unsubscribe();
     };
-    //Requests the event from the dataservice and updates the form accordingly
-    EventEditComponent.prototype.getEvent = function (id) {
-        var _this = this;
-        this.serviceeventData.getEvent(id)
-            .subscribe(function (event) { return _this.onEventRetrieved(event); }, function (error) { return _this.errorMessage = error; });
+    EventEditComponent.prototype.EditButtonClick = function () {
+        this.editMode = true;
+        document.getElementsByName("formfieldset")[0].removeAttribute("disabled");
     };
     //If event form has data which is valid, merge it with what the event object initially had, then send it to save data service
-    EventEditComponent.prototype.saveEvent = function () {
+    EventEditComponent.prototype.SaveFormButtonClick = function () {
         var _this = this;
         if (this.eventForm.dirty && this.eventForm.valid) {
             var e = Object.assign({}, this.event, this.eventForm.value);
-            this.serviceeventData.saveEvent(e)
-                .subscribe(function () { return _this.onEventSaved(); }, function (error) { return _this.errorMessage = error; });
+            this.serviceeventData.saveEvent(e).subscribe(function () { return _this.onEventSaved(); }, function (error) { return _this.errorMessage = error; });
+            //Reroute to this in order to refill the form with the default values
+            this.router.navigate(['/edit/0']);
+        }
+    };
+    EventEditComponent.prototype.EventListButtonClick = function () {
+        this.router.navigate(['/eventlist']);
+    };
+    EventEditComponent.prototype.DeleteButtonClick = function () {
+        var _this = this;
+        if (confirm("Really delete the event: " + this.event.eventName + "?")) {
+            this.serviceeventData.deleteEvent(this.event.id).subscribe(function () { return _this.onEventSaved(); }, function (error) { return _this.errorMessage = error; });
         }
     };
     //Create random event object and add to view
-    EventEditComponent.prototype.generateRandomEvent = function () {
-        var gEvent = { id: 0, eventName: "Scuba Diving",
-            eventType: "Activity",
-            eventStart: this.getISOString(new Date()),
-            eventEnd: this.getISOString(new Date()),
+    EventEditComponent.prototype.GenerateButtonClick = function () {
+        var generatedEvent = { id: 0, eventType: "Activity",
+            eventName: "Scuba Diving",
+            eventStart: (new Date()).toISOString().split("T")[0],
+            eventEnd: (new Date()).toISOString().split("T")[0],
             eventCity: "Bandos Island",
             eventState: "Maldives",
             eventCountry: "Maldvies",
             eventCost: "$110",
             eventComment: "Saw a small shark!" };
-        this.eventForm.controls['eventName'].setValue(gEvent.eventName);
+        this.eventForm.controls['eventName'].setValue(generatedEvent.eventName);
         this.eventForm.controls['eventName'].markAsDirty();
-        this.eventForm.controls['eventType'].setValue(gEvent.eventType);
+        this.eventForm.controls['eventType'].setValue(generatedEvent.eventType);
         this.eventForm.controls['eventType'].markAsDirty();
-        this.eventForm.controls['eventStart'].setValue(gEvent.eventStart);
+        this.eventForm.controls['eventStart'].setValue(generatedEvent.eventStart);
         this.eventForm.controls['eventStart'].markAsDirty();
-        this.eventForm.controls['eventEnd'].setValue(gEvent.eventEnd);
+        this.eventForm.controls['eventEnd'].setValue(generatedEvent.eventEnd);
         this.eventForm.controls['eventEnd'].markAsDirty();
-        this.eventForm.controls['eventCity'].setValue(gEvent.eventCity);
+        this.eventForm.controls['eventCity'].setValue(generatedEvent.eventCity);
         this.eventForm.controls['eventCity'].markAsDirty();
-        this.eventForm.controls['eventState'].setValue(gEvent.eventState);
+        this.eventForm.controls['eventState'].setValue(generatedEvent.eventState);
         this.eventForm.controls['eventState'].markAsDirty();
-        this.eventForm.controls['eventCountry'].setValue(gEvent.eventCountry);
+        this.eventForm.controls['eventCountry'].setValue(generatedEvent.eventCountry);
         this.eventForm.controls['eventCountry'].markAsDirty();
-        this.eventForm.controls['eventCost'].setValue(gEvent.eventCost);
+        this.eventForm.controls['eventCost'].setValue(generatedEvent.eventCost);
         this.eventForm.controls['eventCost'].markAsDirty();
-        this.eventForm.controls['eventComment'].setValue(gEvent.eventComment);
+        this.eventForm.controls['eventComment'].setValue(generatedEvent.eventComment);
         this.eventForm.controls['eventComment'].markAsDirty();
+    };
+    //Requests the event from the dataservice and updates the form accordingly
+    EventEditComponent.prototype.getEvent = function (id) {
+        var _this = this;
+        this.serviceeventData.getEvent(id).subscribe(function (event) { return _this.onEventRetrieved(event); }, function (error) { return _this.errorMessage = error; });
     };
     //Update form values with event data
     EventEditComponent.prototype.onEventRetrieved = function (event) {
+        //The below entryis needed, otherwise, a message "id is missing" (or the like) appears 
         this.event = event;
-        console.log("Component: attempting to add event: " + JSON.stringify(this.event));
-        this.eventForm.patchValue({ eventName: this.event.eventName,
-            eventType: this.event.eventType,
-            eventStart: this.event.eventStart,
-            eventEnd: this.event.eventEnd,
-            eventCity: this.event.eventCity,
-            eventState: this.event.eventState,
-            eventCountry: this.event.eventCountry,
-            eventCost: this.event.eventCost,
-            eventComment: this.event.eventComment });
-        console.log("done");
-    };
-    EventEditComponent.prototype.getISOString = function (aneventdate) {
-        var dateISOformat = aneventdate.toISOString();
-        var dateISOformatArray = dateISOformat.split("T");
-        var dateISOformatDateOnly = dateISOformatArray[0];
-        return dateISOformatDateOnly;
+        this.eventForm.patchValue({ eventType: event.eventType,
+            eventName: event.eventName,
+            eventStart: event.eventStart,
+            eventEnd: event.eventEnd,
+            eventCity: event.eventCity,
+            eventState: event.eventState,
+            eventCountry: event.eventCountry,
+            eventCost: event.eventCost,
+            eventComment: event.eventComment });
     };
     //Display successful save message for 1 second, then reset form entries and navigate to form
     EventEditComponent.prototype.onEventSaved = function () {
@@ -676,20 +659,6 @@ var EventEditComponent = (function () {
         this.eventForm.reset();
         this.router.navigate(['']);
     };
-    EventEditComponent.prototype.gotoEventList = function () {
-        this.router.navigate(['/eventlist']);
-    };
-    EventEditComponent.prototype.deleteEvent = function () {
-        var _this = this;
-        if (confirm("Really delete the event: " + this.event.eventName + "?")) {
-            this.serviceeventData.deleteEvent(this.event.id)
-                .subscribe(function () { return _this.onEventSaved(); }, function (error) { return _this.errorMessage = error; });
-        }
-    };
-    EventEditComponent.prototype.EventEditClick = function () {
-        this.editMode = true;
-        document.getElementsByName("formfieldset")[0].removeAttribute("disabled");
-    };
     __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["ViewChildren"])(__WEBPACK_IMPORTED_MODULE_1__angular_forms__["b" /* FormControlName */], { read: __WEBPACK_IMPORTED_MODULE_0__angular_core__["ElementRef"] }), 
         __metadata('design:type', Array)
@@ -698,7 +667,7 @@ var EventEditComponent = (function () {
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
             template: __webpack_require__(574)
         }), 
-        __metadata('design:paramtypes', [(typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_forms__["c" /* FormBuilder */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__angular_forms__["c" /* FormBuilder */]) === 'function' && _a) || Object, (typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["c" /* ActivatedRoute */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_2__angular_router__["c" /* ActivatedRoute */]) === 'function' && _b) || Object, (typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */]) === 'function' && _c) || Object, (typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_9__service_eventdata_service__["a" /* ServiceEventData */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_9__service_eventdata_service__["a" /* ServiceEventData */]) === 'function' && _d) || Object])
+        __metadata('design:paramtypes', [(typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_forms__["c" /* FormBuilder */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__angular_forms__["c" /* FormBuilder */]) === 'function' && _a) || Object, (typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* ActivatedRoute */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* ActivatedRoute */]) === 'function' && _b) || Object, (typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["c" /* Router */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_2__angular_router__["c" /* Router */]) === 'function' && _c) || Object, (typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_9__service_eventdata_service__["a" /* ServiceEventData */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_9__service_eventdata_service__["a" /* ServiceEventData */]) === 'function' && _d) || Object])
     ], EventEditComponent);
     return EventEditComponent;
     var _a, _b, _c, _d;
@@ -707,13 +676,12 @@ var EventEditComponent = (function () {
 
 /***/ }),
 
-/***/ 510:
+/***/ 509:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__service_eventdata_service__ = __webpack_require__(220);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_router__ = __webpack_require__(97);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return EventListComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -726,27 +694,34 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
-
 var EventListComponent = (function () {
-    function EventListComponent(serviceeventData, router) {
+    function EventListComponent(serviceeventData) {
         this.serviceeventData = serviceeventData;
-        this.router = router;
     }
     EventListComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.serviceeventData.getEvents()
-            .subscribe(function (events) { return _this.events = events; }, function (error) { return _this.errorMessage = error; });
+        this.serviceeventData.getEvents().subscribe(function (events) { return _this.events = events; }, function (error) { return _this.errorMessage = error; });
     };
     EventListComponent = __decorate([
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
             template: __webpack_require__(575)
         }), 
-        __metadata('design:paramtypes', [(typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__service_eventdata_service__["a" /* ServiceEventData */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__service_eventdata_service__["a" /* ServiceEventData */]) === 'function' && _a) || Object, (typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_2__angular_router__["b" /* Router */]) === 'function' && _b) || Object])
+        __metadata('design:paramtypes', [(typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__service_eventdata_service__["a" /* ServiceEventData */] !== 'undefined' && __WEBPACK_IMPORTED_MODULE_1__service_eventdata_service__["a" /* ServiceEventData */]) === 'function' && _a) || Object])
     ], EventListComponent);
     return EventListComponent;
-    var _a, _b;
+    var _a;
 }());
 //# sourceMappingURL=eventlist.component.js.map
+
+/***/ }),
+
+/***/ 510:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return eventTypes; });
+var eventTypes = ["Activity", "Concert/Play", "Conference", "Hotel", "Museum", "Restaurant", "Site", "Tour", "Visit", "Work Trip"];
+//# sourceMappingURL=model-event.js.map
 
 /***/ }),
 
@@ -777,7 +752,7 @@ var PipeEventFilter = (function () {
             filterBy = null;
         }
         if (filterBy) {
-            return value.filter(function (product) { return product.eventName.toLocaleLowerCase().indexOf(filterBy) !== -1; });
+            return value.filter(function (event) { return event.eventName.toLocaleLowerCase().indexOf(filterBy) !== -1; });
         }
         else {
             return value;
@@ -830,7 +805,7 @@ var AboutComponent = (function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_forms__ = __webpack_require__(137);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_forms__ = __webpack_require__(136);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return GenericValidator; });
 
 // Generic validator for Reactive forms
@@ -898,9 +873,9 @@ var GenericValidator = (function () {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_common__ = __webpack_require__(76);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_forms__ = __webpack_require__(137);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_forms__ = __webpack_require__(136);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_http__ = __webpack_require__(94);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_router__ = __webpack_require__(97);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_router__ = __webpack_require__(149);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__about_component__ = __webpack_require__(512);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SharedModule; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
@@ -967,14 +942,14 @@ var environment = {
 /***/ 574:
 /***/ (function(module, exports) {
 
-module.exports = "<style>\r\n\r\n.col-xs-4, .col-xs-6, .col-xs-12 {\r\n    padding-left: 5px;\r\n    padding-right: 5px;\r\n    \r\n}\r\n\r\n.verticalspacing-5px {\r\n    padding-top: 5px;\r\n    padding-bottom: 5px;\r\n}\r\n\r\n\r\n</style>\r\n\r\n<form novalidate\r\n        (ngSubmit)=\"saveEvent()\"\r\n        [formGroup]=\"eventForm\">\r\n    <div class=\"panel-body\">\r\n        <fieldset name=\"formfieldset\" disabled>\r\n            <div class=\"form-group\">          \r\n                <div class=\"col-xs-6 col-lg-6 verticalspacing-5px\">\r\n                    <select class=\"form-control\" \r\n                            formControlName=\"eventType\">\r\n                        <option value=\"SelectEventType\" disabled>Select Event Type</option>\r\n                        <option *ngFor=\"let eventType of eventTypes\" [value]=\"eventType\">{{eventType}}</option>\r\n                    </select>\r\n                </div>\r\n                <div class=\"col-xs-6 col-lg-6 verticalspacing-5px\" [ngClass]=\"{'has-error': displayMessage.eventName }\">\r\n                    <input class=\"form-control\"\r\n                            formControlName=\"eventName\"\r\n                            type=\"text\"\r\n                            placeholder=\"Event Name (required)\" />\r\n                    <span class=\"help-block\" *ngIf=\"displayMessage.eventName\">{{displayMessage.eventName}}</span>\r\n                </div>\r\n            </div>\r\n\r\n            <div class=\"form-group\">\r\n                <div class=\"col-xs-6 col-lg-6 verticalspacing-5px\">\r\n                    <input class=\"form-control\"\r\n                            formControlName=\"eventStart\" \r\n                            type=\"date\"\r\n                            name=\"eventStart\" />\r\n                </div>\r\n                <div class=\"col-xs-6 col-lg-6 verticalspacing-5px\">\r\n                    <input class=\"form-control\"\r\n                            formControlName=\"eventEnd\" \r\n                            type=\"date\"\r\n                            name=\"eventEnd\" />\r\n                </div>\r\n            </div>\r\n\r\n            <div class=\"form-group col-xs-6 col-lg-6\">\r\n                <div class=\"verticalspacing-5px\" >\r\n                    <input class=\"form-control\"\r\n                            formControlName=\"eventCity\"\r\n                            type=\"text\"\r\n                            placeholder=\"City Name\"\r\n                            name=\"eventCity\"/>\r\n                </div>\r\n                <div class=\"verticalspacing-5px\">\r\n                    <input class=\"form-control\"\r\n                            formControlName=\"eventState\"\r\n                            type=\"text\"\r\n                            placeholder=\"State Name\"\r\n                            name=\"eventState\"/>\r\n                </div>\r\n                <div class=\"verticalspacing-5px\">\r\n                    <input class=\"form-control\"\r\n                            formControlName=\"eventCountry\"\r\n                            type=\"text\"\r\n                            placeholder=\"Country Name\"\r\n                            name=\"eventCountry\"/>\r\n                </div>\r\n            </div>\r\n\r\n            <div class=\"form-group col-xs-6 col-lg-6\">\r\n                <div class=\"verticalspacing-5px\">\r\n                    <input class=\"form-control\"\r\n                            formControlName=\"eventCost\"\r\n                            type=\"text\"\r\n                            placeholder=\"Cost\"\r\n                            name=\"eventCost\"/>\r\n                </div>\r\n                <div class=\"verticalspacing-5px\">\r\n                    <textarea class=\"form-control\"\r\n                            formControlName=\"eventComment\"\r\n                            placeholder=\"Comments\"\r\n                            name=\"eventComment\"\r\n                            cols=\"20\"\r\n                            rows=\"3\"></textarea>\r\n                </div>\r\n            </div>\r\n\r\n            <div class=\"has-error\" *ngIf=\"errorMessage\">\r\n                {{errorMessage}}\r\n            </div>\r\n\r\n        </fieldset>\r\n    </div>\r\n    <div class=\"panel-footer\" style=\"position: fixed; bottom: 0px; width: 100%; height: 50px;\" *ngIf=\"editMode\">\r\n        <div class=\"form-group\">\r\n            <button class=\"btn btn-primary\"\r\n                    type=\"submit\"\r\n                    style=\"width:80px;margin-right:10px\"\r\n                    [disabled]='!eventForm.valid'>\r\n                Save\r\n            </button>\r\n            <a *ngIf=\"eventIdFromRouter > 0\" \r\n                class=\"btn btn-default\"\r\n                style=\"width:80px\"\r\n                (click)=\"deleteEvent()\">\r\n                Delete\r\n            </a>\r\n            <a class=\"btn btn-default\"\r\n                style=\"width:80px\"\r\n                (click)=\"gotoEventList()\">\r\n                EventList\r\n            </a>\r\n            <a *ngIf=\"eventIdFromRouter === 0\"\r\n                class=\"btn btn-default\"\r\n                style=\"width:80px\"\r\n                (click)=\"generateRandomEvent()\">\r\n                Generate\r\n            </a>\r\n            <span class='has-error' *ngIf='statusMessage'>\r\n                {{statusMessage}}\r\n            </span>\r\n        </div>\r\n    </div>\r\n\r\n    <div class='panel-footer' style=\"position: fixed; bottom: 0px; width: 100%; height: 50px;\" *ngIf=\"!editMode\">\r\n        <button class=\"btn btn-default\" [routerLink]=\"['/eventlist']\" style=\"width:80px\">\r\n            Back\r\n        </button>\r\n        <a class=\"btn btn-primary\" (click)=\"EventEditClick()\" style=\"width:80px;margin-left:10px\">\r\n            Edit\r\n        </a>\r\n    </div>\r\n\r\n</form>"
+module.exports = "<style>\r\n\r\n.col-xs-4, .col-xs-6, .col-xs-12 {\r\n    padding-left: 5px;\r\n    padding-right: 5px;\r\n    \r\n}\r\n\r\n.verticalspacing-5px {\r\n    padding-top: 5px;\r\n    padding-bottom: 5px;\r\n}\r\n\r\n</style>\r\n\r\n<form (ngSubmit)=\"SaveFormButtonClick()\" [formGroup]=\"eventForm\" novalidate>\r\n    <div class=\"panel-body\">\r\n        <fieldset name=\"formfieldset\" disabled>\r\n\r\n            <div name=\"Event_Type_Name\" class=\"form-group\">          \r\n                <div class=\"col-xs-6 col-lg-6 verticalspacing-5px\">\r\n                    <select class=\"form-control\" \r\n                            formControlName=\"eventType\">\r\n                        <option value=\"SelectEventType\" disabled>Select Event Type</option>\r\n                        <option *ngFor=\"let eventType of eventTypes\" [value]=\"eventType\">{{eventType}}</option>\r\n                    </select>\r\n                </div>\r\n                <div class=\"col-xs-6 col-lg-6 verticalspacing-5px\" [ngClass]=\"{'has-error': displayMessage.eventName }\">\r\n                    <input class=\"form-control\"\r\n                            formControlName=\"eventName\"\r\n                            type=\"text\"\r\n                            placeholder=\"Event Name (required)\" />\r\n                    <span class=\"help-block\" *ngIf=\"displayMessage.eventName\">{{displayMessage.eventName}}</span>\r\n                </div>\r\n            </div>\r\n\r\n            <div name=\"Event_Start_End\" class=\"form-group\">\r\n                <div class=\"col-xs-6 col-lg-6 verticalspacing-5px\">\r\n                    <input class=\"form-control\"\r\n                            formControlName=\"eventStart\" \r\n                            type=\"date\"\r\n                            name=\"eventStart\" />\r\n                </div>\r\n                <div class=\"col-xs-6 col-lg-6 verticalspacing-5px\">\r\n                    <input class=\"form-control\"\r\n                            formControlName=\"eventEnd\" \r\n                            type=\"date\"\r\n                            name=\"eventEnd\" />\r\n                </div>\r\n            </div>\r\n\r\n            <div name=\"Event_City_State_Country\" class=\"form-group col-xs-6 col-lg-6\">\r\n                <div class=\"verticalspacing-5px\" >\r\n                    <input class=\"form-control\"\r\n                            formControlName=\"eventCity\"\r\n                            type=\"text\"\r\n                            placeholder=\"City Name\"\r\n                            name=\"eventCity\"/>\r\n                </div>\r\n                <div class=\"verticalspacing-5px\">\r\n                    <input class=\"form-control\"\r\n                            formControlName=\"eventState\"\r\n                            type=\"text\"\r\n                            placeholder=\"State Name\"\r\n                            name=\"eventState\"/>\r\n                </div>\r\n                <div class=\"verticalspacing-5px\">\r\n                    <input class=\"form-control\"\r\n                            formControlName=\"eventCountry\"\r\n                            type=\"text\"\r\n                            placeholder=\"Country Name\"\r\n                            name=\"eventCountry\"/>\r\n                </div>\r\n            </div>\r\n\r\n            <div name=\"Event_Cost_Comment\" class=\"form-group col-xs-6 col-lg-6\">\r\n                <div class=\"verticalspacing-5px\">\r\n                    <input class=\"form-control\"\r\n                            formControlName=\"eventCost\"\r\n                            type=\"text\"\r\n                            placeholder=\"Cost\"\r\n                            name=\"eventCost\"/>\r\n                </div>\r\n                <div class=\"verticalspacing-5px\">\r\n                    <textarea class=\"form-control\"\r\n                            formControlName=\"eventComment\"\r\n                            placeholder=\"Comments\"\r\n                            name=\"eventComment\"\r\n                            cols=\"20\"\r\n                            rows=\"3\"></textarea>\r\n                </div>\r\n            </div>\r\n\r\n            <div class=\"has-error\" *ngIf=\"errorMessage\">\r\n                {{errorMessage}}\r\n            </div>\r\n\r\n        </fieldset>\r\n    </div>\r\n    <div class=\"panel-footer\" style=\"position: fixed; bottom: 0px; width: 100%; height: 50px;\" *ngIf=\"editMode\">\r\n        <div class=\"form-group\">\r\n            <button class=\"btn btn-primary\"\r\n                    type=\"submit\"\r\n                    style=\"width:80px;margin-right:10px\"\r\n                    [disabled]='!eventForm.valid'>\r\n                Save\r\n            </button>\r\n            <a *ngIf=\"eventIdFromRouter > 0\" \r\n                class=\"btn btn-default\"\r\n                style=\"width:80px\"\r\n                (click)=\"DeleteButtonClick()\">\r\n                Delete\r\n            </a>\r\n            <a class=\"btn btn-default\"\r\n                style=\"width:80px\"\r\n                (click)=\"EventListButtonClick()\">\r\n                EventList\r\n            </a>\r\n            <a *ngIf=\"eventIdFromRouter === 0\"\r\n                class=\"btn btn-default\"\r\n                style=\"width:80px\"\r\n                (click)=\"GenerateButtonClick()\">\r\n                Generate\r\n            </a>\r\n            <span class='has-error' *ngIf='statusMessage'>\r\n                {{statusMessage}}\r\n            </span>\r\n        </div>\r\n    </div>\r\n\r\n    <div class='panel-footer' style=\"position: fixed; bottom: 0px; width: 100%; height: 50px;\" *ngIf=\"!editMode\">\r\n        <button class=\"btn btn-default\" [routerLink]=\"['/list']\" style=\"width:80px\">\r\n            Back\r\n        </button>\r\n        <a class=\"btn btn-primary\" (click)=\"EditButtonClick()\" style=\"width:80px;margin-left:10px\">\r\n            Edit\r\n        </a>\r\n    </div>\r\n\r\n</form>"
 
 /***/ }),
 
 /***/ 575:
 /***/ (function(module, exports) {
 
-module.exports = "<div class='panel-body'>\r\n    <div class='row' style=\"margin-bottom:4px\">\r\n        <div class='col-md-4'>\r\n            <input type='text' placeholder='Filter by' [(ngModel)]='listFilter' />\r\n        </div>\r\n    </div>\r\n\r\n    <div class='has-error' *ngIf='errorMessage'>\r\n        {{errorMessage}}\r\n    </div>\r\n\r\n    <div class='table-responsive'>\r\n        <table class='table' *ngIf='events && events.length'>\r\n            <thead>\r\n                <tr>\r\n                    <th>Event Name</th>\r\n                    <th>Event Description</th>\r\n                </tr>\r\n            </thead>\r\n            <tbody>\r\n                <tr *ngFor='let event of events | pipeeventFilter:listFilter'>\r\n                    <td><a [routerLink]=\"['/eventedit', event.id]\">{{event.eventName}}</a></td>\r\n                    <td>{{event.eventType}}</td>\r\n                </tr>\r\n            </tbody>\r\n        </table>   \r\n    </div>\r\n</div>\r\n\r\n<div class=\"panel-footer\" style=\"position: fixed; bottom: 0px; width: 100%; height: 50px;\">\r\n    <button class=\"btn btn-primary\" [routerLink]=\"['/eventedit', 0]\">\r\n        New\r\n    </button>\r\n    <button class=\"btn btn-default\" [routerLink]=\"['/about']\" style=\"float: right\">\r\n        About \r\n    </button>\r\n</div>"
+module.exports = "\r\n<div class='panel-body'>\r\n    <div class='row' style=\"margin-bottom:4px\">\r\n        <div class='col-md-4'>\r\n            <input type='text' placeholder='Filter by' [(ngModel)]='listFilter' />\r\n        </div>\r\n    </div>\r\n\r\n    <div class='has-error' *ngIf='errorMessage'>\r\n        {{errorMessage}}\r\n    </div>\r\n\r\n    <div class='table-responsive'>\r\n        <table class='table' *ngIf='events && events.length'>\r\n            <thead>\r\n                <tr>\r\n                    <th class=\"col-xs-6 col-lg-6\">Event Name</th>\r\n                    <th class=\"col-xs-6 col-lg-6\">Event Description</th>\r\n                </tr>\r\n            </thead>\r\n            <tbody>\r\n                <tr *ngFor='let event of events | pipeeventFilter:listFilter'>\r\n                    <td><a [routerLink]=\"['/edit', event.id]\">{{event.eventName}}</a></td>\r\n                    <td>{{event.eventType}}</td>\r\n                </tr>\r\n            </tbody>\r\n        </table>   \r\n    </div>\r\n</div>\r\n\r\n<div class=\"panel-footer\" style=\"position: fixed; bottom: 0px; width: 100%; height: 50px;\">\r\n    <button class=\"btn btn-primary\" [routerLink]=\"['/edit', 0]\">\r\n        New\r\n    </button>\r\n    <button class=\"btn btn-default\" [routerLink]=\"['/about']\" style=\"float: right\">\r\n        About \r\n    </button>\r\n</div>"
 
 /***/ }),
 
